@@ -123,7 +123,7 @@ and then you can call
 
 	# PYPI
 	poetry add twine
-	# bump version? in pymtom/__init__.py
+	# bump version? in pymtom/__init__.py & pyproject.toml
 	# commit+push
 	rm -rf dist/
 	poetry build
