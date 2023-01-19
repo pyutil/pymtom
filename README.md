@@ -122,7 +122,7 @@ and then you can call
 	#   with `HostName github.com` and `IdentityFile ~/.ssh/id_ed25519_...` where corresponding public key (.pub) is uploaded to GitHub 
 
 	# PYPI
-	# add into pyproject.toml [tool.poetry]: readme = "README.md"
+	# add into pyproject.toml [tool.poetry]: readme = "README.md"  # https://python-poetry.org/docs/pyproject/#readme
 	# add token from your account on PyPI web: poetry config pypi-token.pypi pypi-xxxxxxxxxxxxxxxx`
 	# bump version? in pymtom/__init__.py & pyproject.toml
 	# commit+push
