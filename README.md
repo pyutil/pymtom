@@ -2,12 +2,12 @@
 
 ## About state of this package
 
-Warning: This package at first publishing is just alfa version.  
+**Warning**: This package at first publishing is just alfa version.  
 &nbsp;&nbsp;&nbsp;&nbsp;It could work, it could fail on some detail, it could fail with heavy things unsolved.  
 &nbsp;&nbsp;&nbsp;&nbsp;The reason is that it is big problem to find a correct and free accessible SOAP MTOM service for development.  
 &nbsp;&nbsp;&nbsp;&nbsp;So, give a try and go away, or (of course better) send a Merge Request.
 
-Warning: My knowledges about SOAP and MTOM are low.  
+**Warning**: My knowledges about SOAP and MTOM are low.  
 &nbsp;&nbsp;&nbsp;&nbsp;I will be not very helpfull with future development if there will be any.  
 &nbsp;&nbsp;&nbsp;&nbsp;If somebody more oriented in SOAP will create Merge Request it could be nice,  
 &nbsp;&nbsp;&nbsp;&nbsp;otherwise you cannot wait something new here in the future.
@@ -31,13 +31,13 @@ For parse we just proxy to Zeep's support, no idea if it works correctly.
 
 ## How to use this package
 
-For mtom_parse this package uses internally Zeep library.  
+For **mtom_parse** this package uses internally Zeep library.  
 That means that you can use their support directly.  
 Not sure if their support run well or not.  
 mtom_parse gives just different result structures - the values have fixed type,
 	while in Zeep you will receive a plain xml or MultiPack.
 
-For mtom_create we  
+For **mtom_create** we  
 - take a xml message,
 - add files as binary attachments,
 - create a http header include mimetypes for each part,
@@ -47,22 +47,23 @@ For mtom_create we
 	-- updating dict for wrapping http header
 
 As an usage example we can take the usage from Zeep.  
-mtom_create is here wrapped into Transport class which will  
+mtom_create is here wrapped into Transport class **MTOMTransport** which will  
 - will take a message prepared for requests call
 - modify it (see mtom_create above),
 - update outer headers using update_headers obtained from mtom_create,
 - call requests for POST
 
-	files = ["tmp/black.png", "tmp/white.png"]client = zeep.Client(
-		"https://service.url",
-		transport=MTOMTransport(files=files),
-	)
-	params = {
-		"fileName_1": "dark.png",
-		"imageData_1": "cid:{cid}",  # will change to <xop:Include href="cid:1">
-		"fileName_2": "light.png",
-		"imageData_2": "cid:{cid}",  # will change to <xop:Include href="cid:2">
-	client.service.upload(**params)
+		files = ["tmp/black.png", "tmp/white.png"]
+		client = zeep.Client(
+			"https://service.url",
+			transport=MTOMTransport(files=files),
+		)
+		params = {
+			"fileName_1": "dark.png",
+			"imageData_1": "cid:{cid}",  # will change to <xop:Include href="cid:1">
+			"fileName_2": "light.png",
+			"imageData_2": "cid:{cid}",  # will change to <xop:Include href="cid:2">
+		client.service.upload(**params)
 
 Usage from Django and Zeep:  
 You can add a logger:  
@@ -91,9 +92,6 @@ and then you can call
 	#	in-project = true
 	poetry shell
 	pip install --upgrade pip setuptools
-	touch setup.cfg
-	#	[metadata]
-	#	description-file = README.md
 	touch README.md  # https://www.markdownguide.org/basic-syntax/
 	touch .gitignore
 	#	__pycache__/
@@ -122,10 +120,11 @@ and then you can call
 	#   with `HostName github.com` and `IdentityFile ~/.ssh/id_ed25519_...` where corresponding public key (.pub) is uploaded to GitHub 
 
 	# PYPI
-	poetry add twine
+	# add token from your account on PyPI web: poetry config pypi-token.pypi pypi-xxxxxxxxxxxxxxxx
+	# in pyproject.toml [tool.poetry] replace description= with description = "README.md"
 	# bump version? in pymtom/__init__.py & pyproject.toml
 	# commit+push
 	rm -rf dist/
-	poetry build
+	poetry build  # or together: poetry publish --build
 	# zkontrolovat dist/
-	twine upload dist/*  # user is pypi user, ie. zvolsky
+	poetry publish  # user is pypi user, ie. zvolsky
