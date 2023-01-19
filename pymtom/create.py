@@ -14,19 +14,20 @@ def mtom_create(message, files, cid_placeholder=b"cid:{cid}"):
     Parameters:
 
         message     the completely prepared xml request message, without mtom attachments
+                    with b"cid:{cid}" placeholders which will be replaced to <xop:Include..> elements
         files       list of paths to the attachment files
-        mtom_placeholder    placeholder which will be replaced with the link to the attached binary file 
+        cid_placeholder    default or explicit placeholder which will be replaced with the link to the attached binary file 
 
-        The wsdl items having the attribute `xmime:expectedContentTypes`
-            will be replaced with the link (xop:Include) to the mime attached file. 
-        The count of files shoul be equal to the count of elements having `xmime:expectedContentTypes`.
-
-    Example for `zeep` soap client:
-        xmime:expectedContentTypes
+        The count of files should be equal to the count of elements having inner text b"cid:{cid}" (or explicit placeholder).
 
     Result:
 
-        message     finished mtom message, modified to contain attachments
+        message     finished mtom message withou outer http headers, modified to contain attachments
+        update_headers  outer headers (Content-Type, ..) which you should use to update headers
+                    example: headers = {'SOAPAction': '""'}.update(update_headers)
+
+    For `zeep` soap client: We have here a wrapping Transport class,
+        use it as: transport=MTOMTransport(files=[path1, path2, ..])
     """
 
     # https://www.w3.org/Submission/soap11mtom10/
@@ -80,10 +81,7 @@ class _PseudoSessionForInternalCallbackFromPost:
     def post(self, *args, **kwargs):
         kwargs["data"] = self.mtom_message
         response = self.transport.pushed_session.post(*args, **kwargs)
-
-        print(60*'+')
-        print(response.text)
-
+        # print(response.text)
         return response
 
 
@@ -100,6 +98,8 @@ class MTOMTransport(zeep.Transport):
             message, update_headers = mtom_create(message, self.files)
             headers.update(update_headers)
 
+        # we want to inherit the original method (super().post(..)) because it contains some wrapping logging
+        #   but we have to modify the internal call; the trick makes a _PseudoSessionForInternalCallbackFromPost class and its .post() 
         self.pushed_session = self.session  # push
         self.session = _PseudoSessionForInternalCallbackFromPost(self, message)
 
