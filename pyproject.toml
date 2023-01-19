@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "pymtom"
-version = "0.1.4"
-description = "this is description"
+version = "0.1.5"
+description = ""
 authors = ["Mirek Zvolský <zvolsky@seznam.cz>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
 zeep = "^4.2.1"
+twine = "^4.0.2"
 
 [tool.poetry.dev-dependencies]
 
