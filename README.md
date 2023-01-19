@@ -1,5 +1,7 @@
 # pymtom
 
+Sources on GitHub: [github.com/pyutil/pymtom](https://github.com/pyutil/pymtom).
+
 ## About state of this package
 
 **Warning**: This package at first publishing is just alfa version.  
@@ -120,23 +122,13 @@ and then you can call
 	#   with `HostName github.com` and `IdentityFile ~/.ssh/id_ed25519_...` where corresponding public key (.pub) is uploaded to GitHub 
 
 	# PYPI
-	# seems `poetry publish` doesn't support Description, so we must prefer twine
-	#	but after `poetry build` we have no setup.py (to pypi can get info), so lets create setup.py:
-		def setup(*args, **kwargs):
-			pass
-		setup(
-			name='pymtom',
-			description='SOAP MTOM support for Python (experimental), see https://github.com/pyutil/pymtom',
-			license='MIT',
-			url='https://github.com/pyutil/pymtom',
-		)
-	poetry add twine
+	# add into pyproject.toml [tool.poetry]: readme = "README.md"
+	# add token from your account on PyPI web: poetry config pypi-token.pypi pypi-xxxxxxxxxxxxxxxx`
 	# bump version? in pymtom/__init__.py & pyproject.toml
 	# commit+push
 	rm -rf dist/
 	poetry build  # or together: poetry publish --build
 	# zkontrolovat dist/
-	twine upload dist/*  # user is pypi user, ie. zvolsky
-	# maybe later if Desription will be supported
-	#	`add token from your account on PyPI web: poetry config pypi-token.pypi pypi-xxxxxxxxxxxxxxxx`
-	#	`poetry publish --build`
+	# (pip install pkginfo:) pkginfo dist/pymtom... must have `description` and `description_content_type` (thx readme=..)
+	poetry publish
+	# [pypi.org/project/pymtom/](https://pypi.org/project/pymtom/)

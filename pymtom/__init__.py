@@ -1,4 +1,4 @@
-__version__ = '0.1.5'
+__version__ = '0.2.0'
 
 from .create import mtom_create, MTOMTransport
 from .parse import mtom_parse
