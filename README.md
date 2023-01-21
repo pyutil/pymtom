@@ -120,9 +120,9 @@ and then you can call
 	git branch -M main
 	git remote add origin git@github-pyutil-account:pyutil/pymtom.git
 	git config --local user.name "pyutil"
-	git push -u origin main
+	git push -u origin main  # if `push` fails kill temporary the agent: eval $(ssh-agent -k)
 	# so instead of github.com Host directly, we use the github-pyutil-account Host defned in ~/.ssh/config
-	#   with `HostName github.com` and `IdentityFile ~/.ssh/id_ed25519_...` where corresponding public key (.pub) is uploaded to GitHub 
+	#   with `HostName github.com` and `IdentityFile ~/.ssh/id_ed25519_...` where corresponding public key (.pub) is uploaded to GitHub
 
 	# PYPI
 	# add into pyproject.toml [tool.poetry]: readme = "README.md"  # https://python-poetry.org/docs/pyproject/#readme
