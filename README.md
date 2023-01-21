@@ -56,15 +56,18 @@ mtom_create is here wrapped into Transport class **MTOMTransport** which will
 - call requests for POST
 
 		files = ["tmp/black.png", "tmp/white.png"]
+		transport = MTOMTransport()  # older style (files=files) you can still use here
 		client = zeep.Client(
 			"https://service.url",
-			transport=MTOMTransport(files=files),
+			transport=transport,
 		)
 		params = {
 			"fileName_1": "dark.png",
 			"imageData_1": "cid:{cid}",  # will change to <xop:Include href="cid:1">
 			"fileName_2": "light.png",
 			"imageData_2": "cid:{cid}",  # will change to <xop:Include href="cid:2">
+		}
+		transport.add_files(files=files)
 		client.service.upload(**params)
 
 Usage from Django and Zeep:  
@@ -123,7 +126,7 @@ and then you can call
 
 	# PYPI
 	# add into pyproject.toml [tool.poetry]: readme = "README.md"  # https://python-poetry.org/docs/pyproject/#readme
-	# add token from your account on PyPI web: poetry config pypi-token.pypi pypi-xxxxxxxxxxxxxxxx`
+	# add token from your account on PyPI web: poetry config pypi-token.pypi pypi-xxxxxxxxxxxxxxxx
 	# bump version? in pymtom/__init__.py & pyproject.toml
 	# commit+push
 	rm -rf dist/
@@ -132,3 +135,11 @@ and then you can call
 	# (pip install pkginfo:) pkginfo dist/pymtom... must have `description` and `description_content_type` (thx readme=..)
 	poetry publish
 	# [pypi.org/project/pymtom/](https://pypi.org/project/pymtom/)
+
+## What is new?
+
+### 0.3.0
+
+Earlier versions in Zeep scenario were able to add files during instantiating of transport class only: `MTOMTransport(files=files)`.  
+To repair this bad design decision you have now the method `.add_files()` of the transport class which you can use before each service call.  
+Docs were updated.

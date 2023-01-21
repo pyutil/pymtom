@@ -86,17 +86,41 @@ class _PseudoSessionForInternalCallbackFromPost:
 
 
 class MTOMTransport(zeep.Transport):
+    """
+        MTOM support for outgoing message in Zeep.
+
+		transport = MTOMTransport()
+		client = zeep.Client(URL, transport=transport)
+		params = {
+			"fileName_1": "dark.png",
+			"imageData_1": "cid:{cid}",  # will change to <xop:Include href="cid:1">
+			"fileName_2": "light.png",
+			"imageData_2": "cid:{cid}",  # will change to <xop:Include href="cid:2">
+        }
+		transport.add_files(files=["tmp/black.png", "tmp/white.png"])
+		client.service.METHOD(**params)
+    """
     files = []
     pushed_session = None
 
     def __init__(self, **kwargs):
+        """
+        You can stage files here already. But preffered is stage them via .add_files() 
+        """
         self.files = kwargs.pop("files", [])
         super().__init__(**kwargs)
+
+    def add_files(self, files):
+        """
+        files   list of files (pathnames) you want to attach during next service call
+        """
+        self.files = files
 
     def post(self, address, message, headers):
         if self.files:
             message, update_headers = mtom_create(message, self.files)
             headers.update(update_headers)
+            self.files = []
 
         # we want to inherit the original method (super().post(..)) because it contains some wrapping logging
         #   but we have to modify the internal call; the trick makes a _PseudoSessionForInternalCallbackFromPost class and its .post() 
