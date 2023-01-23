@@ -45,12 +45,12 @@ For **mtom_create** we
 - create a http header include mimetypes for each part,
 - replaces text b"cid:{cid}" in a xml message for each attachment,
 - return
-	-- the content of message
-	-- updating dict for wrapping http header
+-- the content of message
+-- updating dict for wrapping http header
 
 As an usage example we can take the usage from Zeep.  
 mtom_create is here wrapped into Transport class **MTOMTransport** which will  
-- will take a message prepared for requests call
+- take a message prepared for requests call
 - modify it (see mtom_create above),
 - update outer headers using update_headers obtained from mtom_create,
 - call requests for POST
